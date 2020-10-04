@@ -6,6 +6,9 @@ import seaborn as sns
 # import EXCEL file with all sheets
 path = r'coronaWorld.xlsx'
 file = pd.read_excel(path, sheet_name=None)
+
+###    The function
+
 def plotGraph(column ,numFilter=100 ,top=(0,10) ,add=['Israel'] , drop=[] ,dates=0 ,plot='line'):
 
 
