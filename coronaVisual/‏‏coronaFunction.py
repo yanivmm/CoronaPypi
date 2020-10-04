@@ -24,7 +24,7 @@ def plotGraph(column ,numFilter=100 ,top=(0,10) ,add=['Israel'] , drop=[] ,dates
                         'Deaths/1M pop', 'Total Tests', 'Tests/1M pop','Deaths/Cases',
                         'Tests/Cases','Recovered/Cases','Tests/Cases/1M pop'].
 
-
+    
     numFilter : int ,optional.
             DESCRIPTION: Num of 'Total Cases' filter for countries to show.
             DEFAULT: 100.
@@ -37,7 +37,7 @@ def plotGraph(column ,numFilter=100 ,top=(0,10) ,add=['Israel'] , drop=[] ,dates
     add : list , optional.
             DESCRIPTION: Add countries.
             DEFAULT: ['Israel'] (The best country ever!).
-
+            
             NOTICE: If Israel is already at the top x countries, you may get an error.
                     In this case ,specify: add=[]
 
@@ -55,7 +55,7 @@ def plotGraph(column ,numFilter=100 ,top=(0,10) ,add=['Israel'] , drop=[] ,dates
             DESCRIPTION: plot kind.
             DEFAULT: 'line'.
             You can choose: ['line','bar','agg'].
-
+            
             Line will show data through time.
             Bar  will show data of today.
             Agg  will show data of today for whole world.
@@ -67,9 +67,9 @@ def plotGraph(column ,numFilter=100 ,top=(0,10) ,add=['Israel'] , drop=[] ,dates
         DESCRIPTION: Visualization.
 
     """
-
-
-
+    
+    
+    
     # style
     sns.set_style('darkgrid')
 
@@ -115,50 +115,56 @@ def plotGraph(column ,numFilter=100 ,top=(0,10) ,add=['Israel'] , drop=[] ,dates
     # grab top countries indexes
     top_countries = top_countries.iloc[top[0]:top[1]].index
 
-    # add/drop - Keeps the order.
-
+    # add/drop - Keeps the order.    
+    
     try:
         top_countries = top_countries.append(pd.Index(add)).drop(drop)
-
+    
     except BaseException:
         pass
-
+        
     # grab data by dates
     selected_countries_data = data.transpose().loc[sheets]
     # grab data by selected countries
     selected_countries_data = selected_countries_data[top_countries]
 
 
-    # plot graphs throuth time
+    # arrange dates
+    
+    firstDate,lastDate = sheets[0],sheets[-1]
+    arrangedDate =  lambda x: '-'.join(x.split('-')[::-1])
+    firstDate,lastDate = arrangedDate(firstDate),arrangedDate(lastDate)
+    
+    ###  plot graphs throuthout time
 
     if  plot == 'line':
-        title = "\n"+ column + " between "+sheets[0]+ " and " + sheets[-1]+ "\n"
+        title = "\n"+ column + " between "+firstDate+ " and " + lastDate+ "\n"
         selected_countries_data.plot(lw = 2,figsize=(12,8), fontsize=15)
         plt.legend(loc='upper left',prop={'size':16})
         plt.title(title,fontsize=25)
         plt.locator_params(nbins=11)
 
-    # plot bar of specific day
+    ### Plot bar of specific day
 
     elif plot == 'bar':
-
-        # Find main feature(f)
+        
+        # Find main feature(f) 
         if   '/' in column :
             f = column.split('/')[0]
         elif ' ' in column:
             f = column.split()[1]
-        else:
+        else: 
             f = column
-
-        # Picking colour
+        
+        # Picking colour 
         color = 'gold' if f=='Cases' else 'lightgreen' if f=='Tests' else 'darkblue' if f=='Recovered' else 'coral' if f=='Deaths' else 'orange'
-
-        title = "\n " + column + " as of the " + sheets[-1] + "\n"
+        
+        title = "\n " + column + " as of the " + lastDate + "\n"
         selected_countries_data.iloc[-1].plot(kind=plot,figsize=(12,6),color=color,fontsize = 15)
         plt.title(title,fontsize=25)
         plt.xlabel('')
-
-    # plot one summering data for all countries
+        
+    ###   plot one summering data for all countries
 
     elif plot == 'agg':
 
@@ -169,7 +175,7 @@ def plotGraph(column ,numFilter=100 ,top=(0,10) ,add=['Israel'] , drop=[] ,dates
         if column in ['Cases/1M pop','Deaths/1M pop','Tests/1M pop','Deaths/Cases','Tests/Cases','Recovered/Cases','Tests/Cases/1M pop']:
             print('\n\t It is not wise to aggregate a ratio column.')
             print('\t Remember, the avg. of a ratio column isn\'t the weighted ratio. \n\t Please try a \'Total\'-kind column.')
-
+            
         else:
             totalAmount = round(data.transpose().iloc[-1].sum())
-            print('\n\n\t\tThe ' + column +' of the world as of the '+sheets[-1] +' is: \n\n\t\t\t\t ' ,totalAmount,'\n\n')
+            print('\n\n\t\tThe ' + column +' of the world as of the '+lastDate +' is: \n\n\t\t\t\t ' ,totalAmount,'\n\n')
