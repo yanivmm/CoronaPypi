@@ -3,13 +3,13 @@ from distutils.core import setup
 setup(
   name = 'coronaVisual',
   packages = ['coronaVisual'],
-  version = '0.4',
+  version = '0.5',
   license='MIT',
   description = 'Visualizing the Corona-Virus world data throughout time.',
   author = 'Yaniv Maimon',
   author_email = 'yanivmaimon18@gmail.com',
   url = 'https://github.com/yanivmm/coronaVisual',
-  download_url = 'https://github.com/yanivmm/coronaVisual/archive/v_04.tar.gz',
+  download_url = 'https://github.com/yanivmm/coronaVisual/archive/v_05.tar.gz',
   keywords = ['vizualization', 'data', 'coronavirus', 'COVID-19', 'Timeline','Corona','pandemic'],
   install_requires=[
 
